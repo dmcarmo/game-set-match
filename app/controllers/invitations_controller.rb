@@ -23,6 +23,8 @@ class InvitationsController < ApplicationController
       end
     else
       flash[:alert] = "User does not exist or is already a member."
+      @invitation = @group.invitations.new
+      authorize @invitation
       render :new, status: :unprocessable_entity
     end
   end
