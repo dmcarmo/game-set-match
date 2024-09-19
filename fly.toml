@@ -4,7 +4,7 @@
 #
 
 app = 'game-set-match'
-primary_region = 'cdg'
+primary_region = 'ams'
 console_command = '/rails/bin/rails console'
 
 [build]
