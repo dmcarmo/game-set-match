@@ -2,13 +2,11 @@ class InvitationsController < ApplicationController
   before_action :set_invitation, only: %i[show accept decline]
   before_action :set_group, only: %i[new create]
 
-  # GET /invitations
   def new
     @invitation = @group.invitations.new
     authorize @invitation
   end
 
-  # POST /invitations
   def create
     invited_user = User.find_by(email: invitation_params[:email])
 
@@ -29,7 +27,6 @@ class InvitationsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /invitations/:id/accept
   def accept
     authorize @invitation
     if @invitation.pending?
@@ -41,7 +38,6 @@ class InvitationsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /invitations/:id/decline
   def decline
     authorize @invitation
     if @invitation.pending?
@@ -49,6 +45,22 @@ class InvitationsController < ApplicationController
       redirect_to authenticated_root_path, notice: "Invitation declined."
     else
       redirect_to authenticated_root_path, alert: "Invalid or already responded invitation."
+    end
+  end
+
+  def join
+    @group = Group.find_by(invitation_token: params[:token])
+
+    if @group
+      if user_signed_in?
+        current_user.groups << @group unless current_user.groups.include?(@group)
+        redirect_to @group, notice: "You have successfully joined the group."
+      else
+        session[:pending_invitation_token] = params[:token]
+        redirect_to new_user_registration_path, notice: "Please sign up or log in to join the group."
+      end
+    else
+      redirect_to root_path, alert: "Invalid invitation link."
     end
   end
 

@@ -1,8 +1,12 @@
 <div class="container">
   <h1><%= @group.name %></h1>
 
-  <div class="mb-3">
+  <div class="mb-3" data-controller="clipboard">
     <%= link_to 'Invite Members', new_group_invitation_path(@group), class: "btn btn-primary" %>
+    <input type="hidden" data-clipboard-target="source" value="<%= join_group_url(token: @group.invitation_token) %>">
+    <button data-clipboard-target="button" data-action="click->clipboard#copy" class="btn btn-outline-secondary">
+      Copy Invitation Link
+    </button>
     <%= link_to 'Edit Group', edit_group_path(@group), class: "btn btn-warning" %>
     <%= link_to 'Back to Dashboard', authenticated_root_path, class: "btn btn-secondary" %>
   </div>

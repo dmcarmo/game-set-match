@@ -1,7 +1,6 @@
 class GroupsController < ApplicationController
   before_action :set_group, only: %i[show edit update destroy]
 
-  # GET /groups/:id
   def show
     authorize @group
     @members = @group.users
@@ -27,13 +26,11 @@ class GroupsController < ApplicationController
     end
   end
 
-  # GET /groups/new
   def new
     @group = Group.new
     authorize @group
   end
 
-  # POST /groups
   def create
     @group = current_user.owned_groups.build(group_params)
     authorize @group
@@ -48,12 +45,10 @@ class GroupsController < ApplicationController
     end
   end
 
-  # GET /groups/:id/edit
   def edit
     authorize @group
   end
 
-  # PATCH/PUT /groups/:id
   def update
     authorize @group
     if @group.update(group_params)
@@ -63,11 +58,33 @@ class GroupsController < ApplicationController
     end
   end
 
-  # DELETE /groups/:id
   def destroy
     authorize @group
     @group.destroy
     redirect_to groups_url, notice: "Group was successfully deleted."
+  end
+
+  def join
+    @group = Group.find_by(invitation_token: params[:token])
+
+    if @group.nil?
+      skip_authorization
+      redirect_to unauthenticated_root_path, alert: "Invalid invitation link."
+    else
+      authorize @group
+
+      if user_signed_in?
+        if current_user.groups.include?(@group)
+          redirect_to @group, notice: "You are already a member of this group."
+        else
+          Membership.create(user: current_user, group: @group)
+          redirect_to @group, notice: "You have successfully joined the group."
+        end
+      else
+        session[:pending_invitation_token] = params[:token]
+        redirect_to new_user_registration_path, notice: "Please sign up or log in to join the group."
+      end
+    end
   end
 
   private

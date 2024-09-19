@@ -21,6 +21,10 @@ class GroupPolicy < ApplicationPolicy
     record.owner_id == user.id
   end
 
+  def join?
+    true
+  end
+
   class Scope < ApplicationPolicy::Scope
     # NOTE: Be explicit about which records you allow access to!
     # def resolve

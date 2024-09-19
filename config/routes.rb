@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  devise_for :users
+  devise_for :users, controllers: { registrations: "users/registrations" }
 
   devise_scope :user do
     authenticated :user do
@@ -22,6 +22,7 @@ Rails.application.routes.draw do
     # resources :memberships, only: %i[create destroy]
     resources :invitations, only: %i[new create]
   end
+  get "join/:token", to: "groups#join", as: "join_group"
 
   resources :invitations, only: [] do
     member do
