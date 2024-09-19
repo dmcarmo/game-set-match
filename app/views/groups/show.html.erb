@@ -24,7 +24,7 @@
             <td><%= member.email %></td>
             <td>
               <% if member != @group.owner %>
-                <%= link_to 'Remove', membership_path(@group.memberships.find_by(user_id: member.id)), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger btn-sm" %>
+                <%#= link_to 'Remove', membership_path(@group.memberships.find_by(user_id: member.id)), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger btn-sm" %>
               <% end %>
             </td>
           </tr>
