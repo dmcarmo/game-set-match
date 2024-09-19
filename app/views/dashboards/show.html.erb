@@ -1,7 +1,66 @@
-<div class="mt-4 d-flex justify-content-center">
-  <h1>Hi <%= current_user.email %></h1>
+<div class="container">
+  <div class="mt-4">
+    <h1>Hi <%= current_user.name %>!</h1>
+    <h2>Your Groups</h1>
+  </div>
+
+  <div class="mb-3">
+    <%= link_to 'Create New Group', new_group_path, class: "btn btn-primary" %>
+  </div>
+
+  <% if @groups.any? %>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @groups.each do |group| %>
+          <tr>
+            <td><%= group.name %></td>
+            <td>
+              <%= link_to 'View', group_path(group), class: "btn btn-info btn-sm" %>
+              <%= link_to 'Edit', edit_group_path(group), class: "btn btn-warning btn-sm" %>
+              <%= link_to 'Delete', group_path(group), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger btn-sm" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p>No groups found. Create one now!</p>
+  <% end %>
+
+  <div class="container">
+  <h1>Pending Invitations</h1>
+
+  <% if @invitations.any? %>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Group</th>
+          <th>Invited By</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @invitations.each do |invitation| %>
+          <tr>
+            <td><%= invitation.group.name %></td>
+            <td><%= invitation.invited_by.name %></td>
+            <td>
+              <%= button_to 'Accept', accept_invitation_path(invitation), method: :patch, class: "btn btn-success btn-sm" %>
+              <%= button_to 'Decline', decline_invitation_path(invitation), method: :patch, class: "btn btn-danger btn-sm" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p>No pending invitations.</p>
+  <% end %>
 </div>
 
-<div class="mt-4 d-flex justify-content-center">
-  <%= button_to "Thing" , class: "btn btn-primary"%>
 </div>

@@ -1,0 +1,5 @@
+<% if current_user.groups.include?(@group) %>
+  <%= link_to 'Leave Group', membership_path(@group.memberships.find_by(user: current_user)), method: :delete, class: "btn btn-danger" %>
+<% else %>
+  <%= link_to 'Join Group', group_memberships_path(@group), method: :post, class: "btn btn-primary" %>
+<% end %>

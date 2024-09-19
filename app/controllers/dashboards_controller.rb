@@ -1,3 +1,6 @@
 class DashboardsController < ApplicationController
-  def show; end
+  def show
+    @groups = current_user.groups
+    @invitations = current_user.invitations
+  end
 end

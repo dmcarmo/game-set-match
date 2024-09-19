@@ -1,0 +1,37 @@
+<div class="container">
+  <h1><%= @group.name %></h1>
+
+  <div class="mb-3">
+    <%= link_to 'Invite Members', new_group_invitation_path(@group), class: "btn btn-primary" %>
+    <%= link_to 'Edit Group', edit_group_path(@group), class: "btn btn-warning" %>
+    <%= link_to 'Back to Groups', groups_path, class: "btn btn-secondary" %>
+  </div>
+
+  <h3>Members</h3>
+  <% if @members.any? %>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @members.each do |member| %>
+          <tr>
+            <td><%= member.name %></td>
+            <td><%= member.email %></td>
+            <td>
+              <% if member != @group.owner %>
+                <%= link_to 'Remove', membership_path(@group.memberships.find_by(user_id: member.id)), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger btn-sm" %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p>No members in this group yet.</p>
+  <% end %>
+</div>

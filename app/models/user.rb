@@ -4,8 +4,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  has_many :memberships
+  has_many :memberships, dependent: :destroy
   has_many :groups, through: :memberships
-  has_many :owned_groups, class_name: "Group", foreign_key: "owner_id"
-  has_many :invitations
+  has_many :owned_groups, class_name: "Group", foreign_key: "owner_id", dependent: :destroy
+  has_many :invitations, dependent: :destroy
 end

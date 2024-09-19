@@ -1,0 +1,12 @@
+<div class="container">
+  <h1>Invite a User to <%= @group.name %></h1>
+
+  <%= simple_form_for [@group, @invitation] do |form| %>
+    <%= form.input :email, label: "User's Email", required: true, input_html: { class: 'form-control' } %>
+
+    <div class="form-group">
+      <%= form.button :submit, 'Send Invitation', class: "btn btn-primary" %>
+      <%= link_to 'Cancel', group_path(@group), class: "btn btn-secondary" %>
+    </div>
+  <% end %>
+</div>

@@ -17,4 +17,18 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "pages#home"
+
+  resources :groups do
+    # resources :memberships, only: %i[create destroy]
+    resources :invitations, only: %i[new create]
+  end
+
+  resources :invitations, only: %i[index show] do
+    member do
+      patch "accept"
+      patch "decline"
+    end
+  end
+
+  # resources :memberships, only: [:destroy]
 end
