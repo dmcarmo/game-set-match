@@ -35,10 +35,26 @@
     <p>No members in this group yet.</p>
   <% end %>
 
-  <h3>Group Availabilities</h3>
+  <h3>Group Calendar</h3>
+  <%= month_calendar(events: @calendar_events) do |date, events| %>
+    <div class="day-container">
+      <%= date.day %>
+      <% events.each do |event| %>
+        <div class="<%= event.type %>-event">
+          <% if event.type == 'availability' %>
+            <span class="availability"><%= event.name %></span>
+          <% else %>
+            <span class="intersection"><%= event.overlap_count %> available</span>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <h3>Group Availabilities (just to confirm)</h3>
   <ul>
     <% @availabilities.each do |availability| %>
-      <li><%= availability.name %> - <%= availability.start_time.to_date %> to <%= availability.end_time.to_date %></li>
+      <li><%= availability.user.name %> - <%= availability.start_time.to_date %> to <%= availability.end_time.to_date %></li>
     <% end %>
   </ul>
 
@@ -55,13 +71,4 @@
   <% else %>
     <p>No overlapping availabilities found.</p>
   <% end %>
-
-  <h3>Highlighted Intersections</h3>
-  <ul>
-    <!--
-    <%# @intersections.each do |intersection| %>
-      <li>Intersection from <%#= intersection.begin %> to <%#= intersection.end %></li>
-    <%# end %>
-    -->
-  </ul>
 </div>

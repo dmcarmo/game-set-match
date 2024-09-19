@@ -4,13 +4,26 @@ class GroupsController < ApplicationController
   # GET /groups/:id
   def show
     @members = @group.users
-    @availabilities = @members
-                      .joins(:availabilities)
-                      .select("users.name, availabilities.start_time, availabilities.end_time")
-                      .order("availabilities.start_time ASC")
-    # @intersections = find_intersections(@availabilities)
-    @availability_intersections = AvailabilityIntersectionService.calculate(@group.member_availabilities,
+    @availabilities = @group.member_availabilities
+    @availability_intersections = AvailabilityIntersectionService.calculate(@availabilities,
                                                                             @group.member_count)
+    @calendar_events = @availabilities.map do |avail|
+      Event.new(
+        start_time: avail.start_time,
+        end_time: avail.end_time,
+        name: avail.user.name,
+        type: "availability"
+      )
+    end
+
+    @calendar_events += @availability_intersections.map do |intersection|
+      Event.new(
+        start_time: intersection[:start_time],
+        end_time: intersection[:end_time],
+        overlap_count: intersection[:overlap_count],
+        type: "intersection"
+      )
+    end
   end
 
   # GET /groups/new
@@ -58,20 +71,5 @@ class GroupsController < ApplicationController
 
   def group_params
     params.require(:group).permit(:name)
-  end
-
-  def find_intersections(availabilities)
-    intervals = availabilities.map { |a| (a.start_time..a.end_time) }.sort_by(&:begin)
-    raise
-    intersections = []
-    intervals.each_with_index do |interval, i|
-      count = intervals[i + 1..-1].count { |i2| i2.overlaps?(interval) }
-      intersections << interval if count >= 2
-    end
-    intersections
-  end
-
-  def overlaps?(other)
-    self.begin <= other.end && self.end >= other.begin
   end
 end

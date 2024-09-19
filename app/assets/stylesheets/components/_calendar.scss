@@ -1,0 +1,17 @@
+.simple-calendar {
+  .day-container {
+    min-height: 80px;
+  }
+  .availability-event {
+    background-color: #e6f3ff;
+    border-radius: 4px;
+    padding: 2px 4px;
+    margin-bottom: 2px;
+  }
+  .intersection-event {
+    background-color: #d4edda;
+    border-radius: 4px;
+    padding: 2px 4px;
+    margin-bottom: 2px;
+  }
+}

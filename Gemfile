@@ -48,6 +48,9 @@ gem "simple_form", github: "heartcombo/simple_form"
 # authentication
 gem "devise"
 
+# calendar
+gem "simple_calendar"
+
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[windows jruby]
 
