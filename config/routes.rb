@@ -18,7 +18,7 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "pages#home"
 
-  resources :groups do
+  resources :groups, except: :index do
     # resources :memberships, only: %i[create destroy]
     resources :invitations, only: %i[new create]
   end
@@ -29,6 +29,8 @@ Rails.application.routes.draw do
       patch "decline"
     end
   end
+
+  resources :availabilities, except: %i[index show]
 
   # resources :memberships, only: [:destroy]
 end

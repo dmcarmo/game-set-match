@@ -1,6 +1,7 @@
 class DashboardsController < ApplicationController
   def show
     @groups = current_user.groups
-    @invitations = current_user.invitations
+    @invitations = current_user.invitations.pending
+    @availabilities = current_user.availabilities
   end
 end

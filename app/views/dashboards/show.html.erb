@@ -1,11 +1,7 @@
 <div class="container">
   <div class="mt-4">
     <h1>Hi <%= current_user.name %>!</h1>
-    <h2>Your Groups</h1>
-  </div>
-
-  <div class="mb-3">
-    <%= link_to 'Create New Group', new_group_path, class: "btn btn-primary" %>
+    <h2>Your Groups</h2>
   </div>
 
   <% if @groups.any? %>
@@ -32,35 +28,69 @@
   <% else %>
     <p>No groups found. Create one now!</p>
   <% end %>
+  <div class="mb-3">
+    <%= link_to 'Create New Group', new_group_path, class: "btn btn-primary" %>
+  </div>
 
-  <div class="container">
-  <h1>Pending Invitations</h1>
+  <div class="mt-3">
+    <h2>Pending Invitations</h2>
 
-  <% if @invitations.any? %>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>Group</th>
-          <th>Invited By</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @invitations.each do |invitation| %>
+    <% if @invitations.any? %>
+      <table class="table table-striped">
+        <thead>
           <tr>
-            <td><%= invitation.group.name %></td>
-            <td><%= invitation.invited_by.name %></td>
-            <td>
-              <%= button_to 'Accept', accept_invitation_path(invitation), method: :patch, class: "btn btn-success btn-sm" %>
-              <%= button_to 'Decline', decline_invitation_path(invitation), method: :patch, class: "btn btn-danger btn-sm" %>
-            </td>
+            <th>Group</th>
+            <th>Invited By</th>
+            <th>Actions</th>
           </tr>
-        <% end %>
-      </tbody>
-    </table>
-  <% else %>
-    <p>No pending invitations.</p>
-  <% end %>
+        </thead>
+        <tbody>
+          <% @invitations.each do |invitation| %>
+            <tr>
+              <td><%= invitation.group.name %></td>
+              <td><%= invitation.invited_by.name %></td>
+              <td>
+                <%= button_to 'Accept', accept_invitation_path(invitation), method: :patch, class: "btn btn-success btn-sm" %>
+                <%= button_to 'Decline', decline_invitation_path(invitation), method: :patch, class: "btn btn-danger btn-sm" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p>No pending invitations.</p>
+    <% end %>
+  </div>
+  <div class="mt-3">
+    <h2>Availability</h2>
+    <%= link_to 'Add new availability', new_availability_path, class: "btn btn-primary" %>
+
+    <% if @availabilities.any? %>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @availabilities.each do |availability| %>
+            <tr>
+              <td><%= availability.start_time.to_date %></td>
+              <td><%= availability.end_time.to_date %></td>
+              <td>
+                <%= link_to "Edit", edit_availability_path(availability), class: "btn btn-warning btn-sm" %>
+                <%= link_to 'Delete', availability_path(availability), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"}, class: "btn btn-danger btn-sm" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p>No availabilities set</p>
+    <% end %>
+  </div>
 </div>
 
-</div>
+

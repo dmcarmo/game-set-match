@@ -3,4 +3,12 @@ class Group < ApplicationRecord
   has_many :memberships
   has_many :users, through: :memberships
   has_many :invitations
+
+  def member_count
+    users.count
+  end
+
+  def member_availabilities
+    Availability.where(user_id: users.pluck(:id))
+  end
 end

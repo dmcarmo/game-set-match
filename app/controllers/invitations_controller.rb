@@ -40,7 +40,7 @@ class InvitationsController < ApplicationController
       @invitation.group.memberships.create(user: @invitation.user)
       redirect_to @invitation.group, notice: "Invitation accepted."
     else
-      redirect_to invitations_path, alert: "Invalid or already responded invitation."
+      redirect_to authenticated_root_path, alert: "Invalid or already responded invitation."
     end
   end
 
@@ -48,9 +48,9 @@ class InvitationsController < ApplicationController
   def decline
     if @invitation.pending?
       @invitation.declined!
-      redirect_to invitations_path, notice: "Invitation declined."
+      redirect_to authenticated_root_path, notice: "Invitation declined."
     else
-      redirect_to invitations_path, alert: "Invalid or already responded invitation."
+      redirect_to authenticated_root_path, alert: "Invalid or already responded invitation."
     end
   end
 
