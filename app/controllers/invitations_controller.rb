@@ -3,13 +3,9 @@ class InvitationsController < ApplicationController
   before_action :set_group, only: %i[new create]
 
   # GET /invitations
-  def index
-    @invitations = current_user.invitations.pending
-  end
-
-  # GET /invitations
   def new
     @invitation = @group.invitations.new
+    authorize @invitation
   end
 
   # POST /invitations
@@ -18,6 +14,7 @@ class InvitationsController < ApplicationController
 
     if invited_user && !@group.users.include?(invited_user)
       @invitation = @group.invitations.build(user: invited_user, invited_by: current_user)
+      authorize @invitation
 
       if @invitation.save
         redirect_to @group, notice: "Invitation sent successfully."
@@ -30,11 +27,9 @@ class InvitationsController < ApplicationController
     end
   end
 
-  # GET /invitations/:id
-  def show; end
-
   # PATCH/PUT /invitations/:id/accept
   def accept
+    authorize @invitation
     if @invitation.pending?
       @invitation.accepted!
       @invitation.group.memberships.create(user: @invitation.user)
@@ -46,6 +41,7 @@ class InvitationsController < ApplicationController
 
   # PATCH/PUT /invitations/:id/decline
   def decline
+    authorize @invitation
     if @invitation.pending?
       @invitation.declined!
       redirect_to authenticated_root_path, notice: "Invitation declined."

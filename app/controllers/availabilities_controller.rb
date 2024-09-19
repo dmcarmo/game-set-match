@@ -5,11 +5,13 @@ class AvailabilitiesController < ApplicationController
   def new
     @user = current_user
     @availability = current_user.availabilities.new
+    authorize @availability
   end
 
   # POST /users/:user_id/availabilities
   def create
     @availability = current_user.availabilities.new(availability_params)
+    authorize @availability
     if @availability.save
       redirect_to authenticated_root_path, notice: "Availability added successfully."
     else
@@ -20,10 +22,12 @@ class AvailabilitiesController < ApplicationController
   # GET /users/:user_id/availabilities/:id/edit
   def edit
     @user = current_user
+    authorize @availability
   end
 
   # PATCH/PUT /users/:user_id/availabilities/:id
   def update
+    authorize @availability
     if @availability.update(availability_params)
       redirect_to authenticated_root_path, notice: "Availability updated successfully."
     else
@@ -33,6 +37,7 @@ class AvailabilitiesController < ApplicationController
 
   # DELETE /users/:user_id/availabilities/:id
   def destroy
+    authorize @availability
     @availability.destroy
     redirect_to authenticated_root_path, notice: "Availability removed successfully."
   end

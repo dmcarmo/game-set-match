@@ -23,7 +23,7 @@ Rails.application.routes.draw do
     resources :invitations, only: %i[new create]
   end
 
-  resources :invitations, only: %i[index show] do
+  resources :invitations, only: [] do
     member do
       patch "accept"
       patch "decline"
