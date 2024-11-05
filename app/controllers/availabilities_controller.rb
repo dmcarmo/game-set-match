@@ -19,7 +19,7 @@ class AvailabilitiesController < ApplicationController
     # end
     # Collect selected dates from the form submission
     selected_dates = availability_params[:start_time].first.split(",").reject(&:blank?).map do |date_str|
-      Date.parse(date_str.strip) # Strip whitespace and parse each date
+      DateTime.parse(date_str.strip) # Strip whitespace and parse each date
     end
 
     # Track any availability records that fail to save
@@ -28,7 +28,7 @@ class AvailabilitiesController < ApplicationController
     # Create an availability record for each selected date
     selected_dates.each do |date|
       # Initialize a new Availability record
-      availability = current_user.availabilities.new(start_time: date)
+      availability = current_user.availabilities.new(start_time: date, end_time: date.change({ hour: 23, min: 59 }))
 
       # Authorize the availability record (assuming you're using Pundit)
       authorize availability

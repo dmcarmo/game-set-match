@@ -55,13 +55,7 @@
     </div>
   <% end %>
 
-  <h3>Group Availabilities (just to confirm)</h3>
-  <ul>
-    <% @availabilities.each do |availability| %>
-      <li><%= availability.user.name %> - <%= availability.start_time.to_date %> to <%= availability.end_time.to_date %></li>
-    <% end %>
-  </ul>
-
+  <h3>Group Availabilities</h3>
   <% if @availability_intersections.any? %>
     <ul>
       <% @availability_intersections.each do |intersection| %>
