@@ -1,8 +1,8 @@
 class Availability < ApplicationRecord
   belongs_to :user
 
-  validates :start_time, :end_time, presence: true
-  validate :end_time_after_start_time
+  validates :start_time, presence: true
+  validate :end_time_after_start_time, if: :end_time
 
   private
 

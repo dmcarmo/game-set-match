@@ -10,11 +10,38 @@ class AvailabilitiesController < ApplicationController
 
   # POST /users/:user_id/availabilities
   def create
-    @availability = current_user.availabilities.new(availability_params)
-    authorize @availability
-    if @availability.save
+    # @availability = current_user.availabilities.new(availability_params)
+    # authorize @availability
+    # if @availability.save
+    #   redirect_to authenticated_root_path, notice: "Availability added successfully."
+    # else
+    #   render :new, status: :unprocessable_entity
+    # end
+    # Collect selected dates from the form submission
+    selected_dates = availability_params[:start_time].first.split(",").reject(&:blank?).map do |date_str|
+      Date.parse(date_str.strip) # Strip whitespace and parse each date
+    end
+
+    # Track any availability records that fail to save
+    failed_dates = []
+
+    # Create an availability record for each selected date
+    selected_dates.each do |date|
+      # Initialize a new Availability record
+      availability = current_user.availabilities.new(start_time: date)
+
+      # Authorize the availability record (assuming you're using Pundit)
+      authorize availability
+
+      # Save each availability, collecting any failures
+      failed_dates << date unless availability.save
+    end
+
+    # Check if all availabilities saved successfully
+    if failed_dates.empty?
       redirect_to authenticated_root_path, notice: "Availability added successfully."
     else
+      flash.now[:alert] = "Some availabilities couldn't be saved: #{failed_dates.join(', ')}"
       render :new, status: :unprocessable_entity
     end
   end
@@ -49,6 +76,6 @@ class AvailabilitiesController < ApplicationController
   end
 
   def availability_params
-    params.require(:availability).permit(:start_time, :end_time)
+    params.require(:availability).permit(start_time: [])
   end
 end
